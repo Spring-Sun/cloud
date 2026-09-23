@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.cloud</groupId>
+        <artifactId>cloud-modules</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <artifactId>cloud-file</artifactId>
+    <name>cloud-file</name>
+    <description>File service backed by the S3 protocol (AWS SDK v2, MinIO/Ceph/S3 compatible)</description>
+
+    <!-- 公共依赖（web/nacos/loadbalancer/common-core/actuator）与构建配置继承自 cloud-modules -->
+    <dependencies>
+        <dependency>
+            <groupId>com.cloud</groupId>
+            <artifactId>cloud-common-security</artifactId>
+        </dependency>
+
+        <!-- AWS SDK v2 - S3 协议客户端 -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>s3</artifactId>
+        </dependency>
+    </dependencies>
+</project>

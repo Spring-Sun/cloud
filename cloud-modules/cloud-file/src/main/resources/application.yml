@@ -1,0 +1,50 @@
+server:
+  port: 9300
+
+spring:
+  application:
+    name: cloud-file
+  profiles:
+    active: dev
+  # 全局开启虚拟线程（Servlet/Tomcat 请求处理、@Async、@Scheduled 等）
+  threads:
+    virtual:
+      enabled: true
+  config:
+    import:
+      - optional:nacos:cloud-file.yaml
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${NACOS_SERVER_ADDR:127.0.0.1:8848}
+        namespace: ${NACOS_NAMESPACE:}
+      config:
+        server-addr: ${NACOS_SERVER_ADDR:127.0.0.1:8848}
+        namespace: ${NACOS_NAMESPACE:}
+        file-extension: yaml
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+
+# S3 协议对象存储（AWS S3 / MinIO / Ceph RGW ...）
+cloud:
+  s3:
+    endpoint: ${S3_ENDPOINT:http://127.0.0.1:9000}
+    region: ${S3_REGION:us-east-1}
+    access-key: ${S3_ACCESS_KEY:minioadmin}
+    secret-key: ${S3_SECRET_KEY:minioadmin}
+    bucket: ${S3_BUCKET:cloud}
+    path-style-access: true
+  security:
+    jwt-secret: ${JWT_SECRET:cloud-default-secret-key-please-change-in-production-0123456789}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+logging:
+  level:
+    com.cloud: info

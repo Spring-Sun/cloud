@@ -1,0 +1,58 @@
+server:
+  port: 9400
+
+spring:
+  application:
+    name: cloud-job
+  profiles:
+    active: dev
+  # 全局开启虚拟线程（Servlet/Tomcat 请求处理、@Async、@Scheduled 等）
+  threads:
+    virtual:
+      enabled: true
+  config:
+    import:
+      - optional:nacos:cloud-job.yaml
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${NACOS_SERVER_ADDR:127.0.0.1:8848}
+        namespace: ${NACOS_NAMESPACE:}
+      config:
+        server-addr: ${NACOS_SERVER_ADDR:127.0.0.1:8848}
+        namespace: ${NACOS_NAMESPACE:}
+        file-extension: yaml
+  data:
+    redis:
+      host: ${REDIS_HOST:127.0.0.1}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      database: 0
+      timeout: 5s
+      lettuce:
+        pool:
+          max-active: 20
+          max-idle: 10
+          min-idle: 0
+
+# 定时任务配置
+cloud:
+  job:
+    enabled: true
+    # 示例任务 cron：每分钟执行一次
+    demo-cron: "0 * * * * ?"
+    # 分布式锁持有超时（秒），应大于任务最长执行时间
+    lock-timeout-seconds: 30
+    lock-key-prefix: "cloud:job:lock:"
+    record-key-prefix: "cloud:job:last:"
+    scheduler-pool-size: 4
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+logging:
+  level:
+    com.cloud: info

@@ -1,0 +1,89 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: cloud-gateway
+  profiles:
+    active: dev
+  # 网关为响应式（WebFlux/Netty）栈，不适用虚拟线程，显式关闭
+  threads:
+    virtual:
+      enabled: false
+  # Nacos 配置导入。"optional:" 前缀可保证在构建时 Nacos 服务器
+  # 不可达的情况下，AOT/构建处理仍能正常进行。
+  config:
+    import:
+      - optional:nacos:cloud-gateway.yaml
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${NACOS_SERVER_ADDR:127.0.0.1:8848}
+        namespace: ${NACOS_NAMESPACE:}
+      config:
+        server-addr: ${NACOS_SERVER_ADDR:127.0.0.1:8848}
+        namespace: ${NACOS_NAMESPACE:}
+        file-extension: yaml
+    gateway:
+      server:
+        webflux:
+          discovery:
+            locator:
+              # 根据服务 id 自动创建路由（服务名转小写），例如 /cloud-system/**
+              enabled: true
+              lower-case-service-id: true
+          # 显式路由：每个下游服务的统一入口
+          routes:
+            - id: cloud-auth
+              uri: lb://cloud-auth
+              predicates:
+                - Path=/auth/**
+              filters:
+                - StripPrefix=1
+            - id: cloud-system
+              uri: lb://cloud-system
+              predicates:
+                - Path=/system/**
+              filters:
+                - StripPrefix=1
+            - id: cloud-file
+              uri: lb://cloud-file
+              predicates:
+                - Path=/file/**
+              filters:
+                - StripPrefix=1
+            - id: cloud-job
+              uri: lb://cloud-job
+              predicates:
+                - Path=/job/**
+              filters:
+                - StripPrefix=1
+          globalcors:
+            cors-configurations:
+              '[/**]':
+                allowed-origin-patterns: "*"
+                allowed-methods: "*"
+                allowed-headers: "*"
+                allow-credentials: true
+
+# 网关级认证（在此校验令牌，并通过内部请求头透传用户身份）
+cloud:
+  gateway:
+    auth:
+      enabled: true
+      jwt-secret: ${JWT_SECRET:cloud-default-secret-key-please-change-in-production-0123456789}
+      white-list:
+        - /auth/login
+        - /auth/logout
+        - /auth/register
+        - /actuator/**
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+logging:
+  level:
+    com.cloud: info

@@ -1,0 +1,52 @@
+server:
+  port: 9200
+
+spring:
+  application:
+    name: cloud-auth
+  profiles:
+    active: dev
+  # 全局开启虚拟线程（Servlet/Tomcat 请求处理、@Async、@Scheduled 等）
+  threads:
+    virtual:
+      enabled: true
+  config:
+    import:
+      - optional:nacos:cloud-auth.yaml
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${NACOS_SERVER_ADDR:127.0.0.1:8848}
+        namespace: ${NACOS_NAMESPACE:}
+      config:
+        server-addr: ${NACOS_SERVER_ADDR:127.0.0.1:8848}
+        namespace: ${NACOS_NAMESPACE:}
+        file-extension: yaml
+  data:
+    redis:
+      host: ${REDIS_HOST:127.0.0.1}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      database: 0
+      timeout: 5s
+      lettuce:
+        pool:
+          max-active: 20
+          max-idle: 10
+          min-idle: 0
+
+# JWT 签名密钥必须与网关的 cloud.gateway.auth.jwt-secret 一致
+cloud:
+  security:
+    jwt-secret: ${JWT_SECRET:cloud-default-secret-key-please-change-in-production-0123456789}
+    token-expire-seconds: 7200
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+logging:
+  level:
+    com.cloud: info
