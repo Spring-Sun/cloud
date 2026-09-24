@@ -1,6 +1,7 @@
 package com.cloud.file.controller;
 
 import com.cloud.common.core.domain.R;
+import com.cloud.file.domain.UploadResult;
 import com.cloud.file.service.FileService;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -29,7 +30,7 @@ public class FileController {
     }
 
     @PostMapping("/upload")
-    public R<String> upload(@RequestParam("file") MultipartFile file) {
+    public R<UploadResult> upload(@RequestParam("file") MultipartFile file) {
         return R.ok("上传成功", fileService.upload(file));
     }
 

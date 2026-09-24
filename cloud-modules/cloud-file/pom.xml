@@ -26,5 +26,11 @@
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>s3</artifactId>
         </dependency>
+
+        <!-- WebP 编解码（sejda webp-imageio，含跨平台原生库），用于图片上传后转存 WebP -->
+        <dependency>
+            <groupId>org.sejda.imageio</groupId>
+            <artifactId>webp-imageio</artifactId>
+        </dependency>
     </dependencies>
 </project>

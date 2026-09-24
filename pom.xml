@@ -34,6 +34,7 @@
         <aws-sdk.version>2.29.45</aws-sdk.version>
         <jjwt.version>0.12.6</jjwt.version>
         <lombok.version>1.18.46</lombok.version>
+        <webp-imageio.version>0.1.6</webp-imageio.version>
 
         <!-- 插件版本 -->
         <spring-boot-maven-plugin.version>${spring-boot.version}</spring-boot-maven-plugin.version>
@@ -86,6 +87,13 @@
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-jsqlparser</artifactId>
                 <version>${mybatis-plus.version}</version>
+            </dependency>
+
+            <!-- WebP ImageIO 插件（sejda，内置跨平台原生库，支持 WebP 读/写编码） -->
+            <dependency>
+                <groupId>org.sejda.imageio</groupId>
+                <artifactId>webp-imageio</artifactId>
+                <version>${webp-imageio.version}</version>
             </dependency>
 
             <!-- JWT -->

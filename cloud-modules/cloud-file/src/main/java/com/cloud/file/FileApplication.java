@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
+import com.cloud.file.config.FileProperties;
 import com.cloud.file.config.S3Properties;
 
 /**
@@ -12,7 +13,7 @@ import com.cloud.file.config.S3Properties;
  */
 @SpringBootApplication
 @EnableDiscoveryClient
-@EnableConfigurationProperties(S3Properties.class)
+@EnableConfigurationProperties({S3Properties.class, FileProperties.class})
 public class FileApplication {
 
     public static void main(String[] args) {

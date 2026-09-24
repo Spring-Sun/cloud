@@ -34,7 +34,7 @@ cloud (parent, pom)
 ├── cloud-auth                   认证服务：签发/注销 Token（端口 9200）
 └── cloud-modules (pom 聚合)
     ├── cloud-system             业务示例：MyBatis-Plus CRUD + RabbitMQ 生产/消费（端口 9201）
-    ├── cloud-file               文件服务：S3 协议上传/下载/删除（端口 9300）
+    ├── cloud-file               文件服务：S3 协议上传/下载/删除，图片上传自动转存 WebP（端口 9300）
     └── cloud-job                定时任务：Spring Scheduling + Redis 分布式锁（端口 9400）
 ```
 
@@ -127,4 +127,6 @@ curl -X POST http://localhost:8080/file/oss/upload \
 ## 备注
 
 - Lombok（1.18.46，由 Spring Boot BOM 管理）已在 `cloud-common-core` 引入；因 JDK 23+ 默认不再从 classpath 自动运行注解处理器，已在父 POM 的 `maven-compiler-plugin` 中通过 `annotationProcessorPaths` 显式声明 Lombok 处理器。其他模块如需使用，只需添加 `org.projectlombok:lombok` 依赖即可。
+- 图片 WebP 转码：`cloud-file` 上传图片时，若为可转换的光栅图片（PNG/JPEG/GIF/BMP）且 `cloud.file.webp.enabled=true`，会同时存储**原件**与 **WebP** 两份，上传接口返回 `originalKey` 与 `webpKey`。WebP 编码由 `org.sejda.imageio:webp-imageio`（内置跨平台原生库）提供；转换失败时自动降级为仅保留原件，不影响上传。
+  - 在 JDK 24+ 运行 `cloud-file` 时，建议加上 `--enable-native-access=ALL-UNNAMED` 启动参数以消除原生库加载告警：`java --enable-native-access=ALL-UNNAMED -jar cloud-file.jar`。
 - 各服务端口：gateway 8080、auth 9200、system 9201、file 9300、job 9400。

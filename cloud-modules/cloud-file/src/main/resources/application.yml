@@ -36,6 +36,12 @@ cloud:
     secret-key: ${S3_SECRET_KEY:minioadmin}
     bucket: ${S3_BUCKET:cloud}
     path-style-access: true
+  # 图片上传后转存 WebP（存储原件 + WebP 两份）
+  file:
+    webp:
+      enabled: true
+      # 有损压缩质量 0.0~1.0
+      quality: 0.8
   security:
     jwt-secret: ${JWT_SECRET:cloud-default-secret-key-please-change-in-production-0123456789}
 
